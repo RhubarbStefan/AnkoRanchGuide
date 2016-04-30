@@ -3,7 +3,7 @@ package com.example.stefan.criminalintent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import org.jetbrains.anko.frameLayout
-import CrimeFragment
+import com.example.stefan.criminalintent.CrimeFragment
 
 class CrimeActivity : AppCompatActivity() {
 
@@ -11,7 +11,7 @@ class CrimeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //val fragment = frameLayout()
         val rootId: Int = 1001
-        //val frag: Fragment = CrimeFragment()
+        //val frag: Fragment = com.example.stefan.criminalintent.CrimeFragment()
 
         frameLayout{id = rootId }
 

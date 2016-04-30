@@ -7,5 +7,7 @@ import java.util.*
  */
 
 class Crime(var title: String = "Crime"){
-    private val id = UUID.randomUUID()
+    val id = UUID.randomUUID()
+    var date = Date()
+    var solved:Boolean = false
 }
