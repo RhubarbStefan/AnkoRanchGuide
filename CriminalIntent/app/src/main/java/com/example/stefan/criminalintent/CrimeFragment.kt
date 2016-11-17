@@ -10,57 +10,74 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import com.example.stefan.criminalintent.Crime
-import com.example.stefan.criminalintent.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.UI
+import java.util.*
 
-/**
- * Created by stefan on 15.04.16.
- */
-
-class CrimeFragment: Fragment() {
-    private var mCrime = Crime()
+class CrimeFragment: Fragment(), AnkoLogger {
+    companion object{
+        val extra_crime_id = "com.bignerdranch.android.criminalintent.crime_id"
+        fun newInstance(crimeId: UUID): CrimeFragment{
+            val args = Bundle()
+            args.putSerializable(extra_crime_id, crimeId)
+            val fragment = CrimeFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+    private var mCrime: Crime? = null
     private var mTitleField: EditText? = null
     private var mDateButton: Button? = null
     private var mSolvedCheckBox: CheckBox? = null
-    override fun onCreate(savedInstanceState: Bundle?){
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CrimeLab.get(activity)
+
+        val crimeId: UUID = arguments.getSerializable(extra_crime_id) as UUID
+        mCrime = CrimeLab.getCrime(crimeId)
     }
 
-    //override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup, savedInstanceState: Bundle?): View? {
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?  {
-        val ui = UI{
-            verticalLayout{
-                textView{
-                    text = getString(R.string.crime_title_label)
+        val ui = try {
+            UI {
+                verticalLayout {
+                    textView {
+                        text = getString(R.string.crime_title_label)
+                    }
+                    mTitleField = editText {
+                        hintResource = R.string.crime_title_hint
+                        setText (mCrime?.title ?: "")
+                    }
+                    textView {
+                        text = getString(R.string.crime_details_label)
+                    }
 
+                    mDateButton = button {
+                        text = mCrime?.date?.toString() ?: Date().toString()
+                        enabled = false
+                    }.lparams(width = matchParent) {
+                        verticalMargin = dip(16)
+                    }
+                    mSolvedCheckBox = checkBox {
+                        text = getString(R.string.crime_solved_label)
+                        isChecked = mCrime?.solved ?: false
+                        onCheckedChange { compoundButton, isChecked -> mCrime?.solved = isChecked }
+                    }.lparams {
+                        margin = dip(16)
+                    }
                 }
-                mTitleField = editText{
-                    hintResource = R.string.crime_title_hint
-                }
-                textView{
-                    text = getString(R.string.crime_details_label)
-                }
-
-                mDateButton = button{
-                    text = mCrime.date.toString()
-                    enabled = false
-                }.lparams(width = matchParent){
-                    verticalMargin = dip(16)
-                }
-                mSolvedCheckBox = checkBox{
-                    text = getString(R.string.crime_solved_label)
-                    onCheckedChange { compoundButton, isChecked -> mCrime.solved=isChecked }
-                }.lparams{
-                    margin = dip(16)
-                }
-            }
-        }.view
+            }.view
+        }
+        catch (e: Exception){
+            error("Could not create UI: $e")
+            null
+        }
 
         mTitleField?.addTextChangedListener(object: TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                mCrime.title = s.toString()
+                mCrime?.title = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
