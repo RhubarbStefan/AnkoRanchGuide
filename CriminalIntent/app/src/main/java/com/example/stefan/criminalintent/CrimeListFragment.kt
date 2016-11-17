@@ -32,9 +32,17 @@ class CrimeListFragment: ListActivity(){
     }
 
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
-        val c = listAdapter.getItem(position)
-        Log.e(TAG, c.toString() + "was clicked")
+        val c = listAdapter.getItem(position) as Crime
+        Log.d(TAG, c.toString() + "was clicked")
+
+        startActivity<CrimeActivity>(CrimeFragment.extra_crime_id to c.id)
     }
+
+    override fun onResume() {
+        super.onResume()
+        (listAdapter as CrimeAdapter).notifyDataSetChanged()
+    }
+
     internal open class CrimeAdapter(val ctx: Context, items: ArrayList<Crime>): ArrayAdapter<Crime>(ctx, 0, items) {
 
         override fun getView(position: Int, oldConvertView: View?, parent: ViewGroup?): View {
