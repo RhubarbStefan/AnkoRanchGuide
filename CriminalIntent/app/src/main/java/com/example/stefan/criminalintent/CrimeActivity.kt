@@ -1,3 +1,5 @@
+/* Not needed right now*/
+
 package com.example.stefan.criminalintent
 
 import android.app.Fragment

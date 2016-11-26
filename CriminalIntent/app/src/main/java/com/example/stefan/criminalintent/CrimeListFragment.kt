@@ -38,7 +38,7 @@ class CrimeListFragment: ListActivity(){
         val c = listAdapter.getItem(position) as Crime
         Log.d(TAG, c.toString() + "was clicked")
 
-        startActivity<CrimeActivity>(CrimeFragment.extra_crime_id to c.id)
+        startActivity<CrimePagerActivity>(CrimeFragment.extra_crime_id to c.id)
     }
 
     override fun onResume() {
@@ -62,7 +62,7 @@ class CrimeListFragment: ListActivity(){
                 }.lparams{
                     alignParentRight()
                 }
-                val titleView = textView(c.toString()) {
+                val titleView = textView(c.title) {
                     setPadding(dip(4),dip(4),dip(4),dip(4))
                 }.lparams{
                     leftOf(box.id)
@@ -76,7 +76,7 @@ class CrimeListFragment: ListActivity(){
 
             }
 
-            return convertView ?: view
+            return view
         }
     }
 

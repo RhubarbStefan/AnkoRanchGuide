@@ -36,6 +36,7 @@ class CrimeFragment: Fragment(), AnkoLogger {
 
         val crimeId: UUID = arguments.getSerializable(extra_crime_id) as UUID
         mCrime = CrimeLab.getCrime(crimeId)
+        error { "I received $crimeId, this results in $mCrime" }
     }
 
 

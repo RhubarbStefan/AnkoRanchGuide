@@ -9,7 +9,7 @@ import java.util.*
 
 object CrimeLab {
     var appContext: Context? = null
-    val crimes: ArrayList<Crime> = ArrayList((1..100).map{ Crime("Crime#" + it, it % 2 == 0 ) })
+    val crimes: ArrayList<Crime> = ArrayList((1..100).map{ Crime("Crime# " + it, it % 2 == 0 ) })
     fun get(c: Context){
         appContext = c.applicationContext
     }

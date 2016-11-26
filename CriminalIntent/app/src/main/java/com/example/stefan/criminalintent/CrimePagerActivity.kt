@@ -31,5 +31,25 @@ class CrimePagerActivity : FragmentActivity(){
                 return CrimeFragment.newInstance(crime?.id ?: UUID.randomUUID())
             }
         }
+
+        val crimeId = intent.getSerializableExtra(CrimeFragment.extra_crime_id) as UUID
+        val crime = (mCrimes as ArrayList).find { it.id == crimeId }
+        val index = (mCrimes as ArrayList).indexOf(crime)
+        mViewPager?.currentItem = index
+
+        mViewPager?.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                val crime = (mCrimes as ArrayList)[position]
+                title = crime.title
+            }
+        })
     }
 }
