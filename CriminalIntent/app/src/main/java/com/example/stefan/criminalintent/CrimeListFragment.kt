@@ -38,7 +38,7 @@ class CrimeListFragment: ListActivity(){
         val c = listAdapter.getItem(position) as Crime
         Log.d(TAG, c.toString() + "was clicked")
 
-        startActivity<CrimePagerActivity>(CrimeFragment.extra_crime_id to c.id)
+        startActivity<CrimePagerActivity>(CrimeFragment.EXTRA_CRIME_ID to c.id)
     }
 
     override fun onResume() {

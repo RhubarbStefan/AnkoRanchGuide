@@ -1,5 +1,7 @@
 package com.example.stefan.criminalintent
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -16,10 +18,12 @@ import java.util.*
 
 class CrimeFragment: Fragment(), AnkoLogger {
     companion object{
-        val extra_crime_id = "com.bignerdranch.android.criminalintent.crime_id"
+        val EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id"
+        private val DIALOG_DATE = "date"
+        private val REQUEST_DATE = 0
         fun newInstance(crimeId: UUID): CrimeFragment{
             val args = Bundle()
-            args.putSerializable(extra_crime_id, crimeId)
+            args.putSerializable(EXTRA_CRIME_ID, crimeId)
             val fragment = CrimeFragment()
             fragment.arguments = args
             return fragment
@@ -34,11 +38,20 @@ class CrimeFragment: Fragment(), AnkoLogger {
         super.onCreate(savedInstanceState)
         CrimeLab.get(activity)
 
-        val crimeId: UUID = arguments.getSerializable(extra_crime_id) as UUID
+        val crimeId: UUID = arguments.getSerializable(EXTRA_CRIME_ID) as UUID
         mCrime = CrimeLab.getCrime(crimeId)
         error { "I received $crimeId, this results in $mCrime" }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != Activity.RESULT_OK) return
+        if(requestCode == REQUEST_DATE){
+            val date = data?.getSerializableExtra(DatePickerFragment.EXTRA_DATE) as Date
+            mCrime?.date = date
+            mDateButton?.text = mCrime?.date.toString()
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?  {
         val ui = try {
@@ -57,7 +70,13 @@ class CrimeFragment: Fragment(), AnkoLogger {
 
                     mDateButton = button {
                         text = mCrime?.date?.toString() ?: Date().toString()
-                        enabled = false
+                        enabled = true
+                        onClick {
+                            val fm = activity.supportFragmentManager
+                            val dialog = DatePickerFragment.newInstance(mCrime?.date ?: Date())
+                            dialog.setTargetFragment(this@CrimeFragment, REQUEST_DATE)
+                            dialog.show(fm, DIALOG_DATE)
+                        }
                     }.lparams(width = matchParent) {
                         verticalMargin = dip(16)
                     }

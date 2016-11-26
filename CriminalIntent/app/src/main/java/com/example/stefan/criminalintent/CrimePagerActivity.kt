@@ -32,7 +32,7 @@ class CrimePagerActivity : FragmentActivity(){
             }
         }
 
-        val crimeId = intent.getSerializableExtra(CrimeFragment.extra_crime_id) as UUID
+        val crimeId = intent.getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID) as UUID
         val crime = (mCrimes as ArrayList).find { it.id == crimeId }
         val index = (mCrimes as ArrayList).indexOf(crime)
         mViewPager?.currentItem = index
@@ -47,8 +47,8 @@ class CrimePagerActivity : FragmentActivity(){
             }
 
             override fun onPageSelected(position: Int) {
-                val crime = (mCrimes as ArrayList)[position]
-                title = crime.title
+                val selectedElement = (mCrimes as ArrayList)[position]
+                title = selectedElement.toString()
             }
         })
     }

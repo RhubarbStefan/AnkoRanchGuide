@@ -8,6 +8,6 @@ import java.util.*
 
 class Crime(var title: String = "Crime", var solved:Boolean = false){
     val id: UUID = UUID.randomUUID()
-    val date = Date()
+    var date = Date()
     override fun toString() = title
 }
