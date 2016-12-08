@@ -3,7 +3,6 @@ package com.example.stefan.criminalintent
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -43,6 +42,8 @@ class DatePickerFragment : DialogFragment() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val v = DatePicker(activity)
+
+        v.calendarViewShown = false
 
         v.init(year, month, day, { view, year, month, day ->
             mDate = GregorianCalendar(year, month, day).time

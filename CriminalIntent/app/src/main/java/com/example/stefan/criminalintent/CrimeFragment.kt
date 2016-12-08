@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.UI
@@ -30,9 +29,7 @@ class CrimeFragment: Fragment(), AnkoLogger {
         }
     }
     private var mCrime: Crime? = null
-    private var mTitleField: EditText? = null
-    private var mDateButton: Button? = null
-    private var mSolvedCheckBox: CheckBox? = null
+    lateinit private var mDateButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,21 +45,35 @@ class CrimeFragment: Fragment(), AnkoLogger {
         if(requestCode == REQUEST_DATE){
             val date = data?.getSerializableExtra(DatePickerFragment.EXTRA_DATE) as Date
             mCrime?.date = date
-            mDateButton?.text = mCrime?.date.toString()
+            mDateButton.text = mCrime?.date.toString()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?  {
-        val ui = try {
+        val ui =
             UI {
                 verticalLayout {
                     textView {
                         text = getString(R.string.crime_title_label)
                     }
-                    mTitleField = editText {
+                    editText {
                         hintResource = R.string.crime_title_hint
                         setText (mCrime?.title ?: "")
+
+                        addTextChangedListener(object: TextWatcher {
+                            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                                mCrime?.title = s.toString()
+                            }
+
+                            override fun afterTextChanged(s: Editable?) {
+
+                            }
+
+                            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+                            }
+                        })
                     }
                     textView {
                         text = getString(R.string.crime_details_label)
@@ -80,7 +91,7 @@ class CrimeFragment: Fragment(), AnkoLogger {
                     }.lparams(width = matchParent) {
                         verticalMargin = dip(16)
                     }
-                    mSolvedCheckBox = checkBox {
+                    checkBox {
                         text = getString(R.string.crime_solved_label)
                         isChecked = mCrime?.solved ?: false
                         onCheckedChange { compoundButton, isChecked -> mCrime?.solved = isChecked }
@@ -89,13 +100,8 @@ class CrimeFragment: Fragment(), AnkoLogger {
                     }
                 }
             }.view
-        }
-        catch (e: Exception){
-            error("Could not create UI: $e")
-            null
-        }
 
-        mTitleField?.addTextChangedListener(object: TextWatcher {
+        /*mTitleField.addTextChangedListener(object: TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 mCrime?.title = s.toString()
             }
@@ -107,7 +113,7 @@ class CrimeFragment: Fragment(), AnkoLogger {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
-        })
+        })*/
 
         return ui
     }

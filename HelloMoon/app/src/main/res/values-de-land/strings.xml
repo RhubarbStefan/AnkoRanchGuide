@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Lieber Mond, heute Nacht hatte ich Probleme zu schlafen, wegen Dir.</string>
+</resources>
